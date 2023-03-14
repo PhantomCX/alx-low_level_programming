@@ -1,51 +1,45 @@
 #include <stdlib.h>
-#include <stdio.h>
+#include "stdio.h"
 
 /**
- * **strtow - splits a string into words
- *
- * @str: string to split
- * Return: pointer to array of strings, or NULL if fail
- */
-char **strtow(char *str)
+* *argstostr - concatenates all the arguments of the program
+* @ac: number of arguments
+* @av: array of arguments
+*
+* Return: Pointer to the new string (Success), NULL (Error)
+*/
+char *argstostr(int ac, char **av)
 {
-	char **a;
-	int i, k, n, word_count = 0, word_len = 0, current_word = 0;
+	int i, j, k, len;
+	char *str;
 
-	if (str == NULL || *str == '\0')
+	if (ac == 0 || av == NULL)
 		return (NULL);
-	for (i = 0; *(str + i) != '\0'; i++)
+
+	for (i = 0; i < ac; i++)
 	{
-		if (*(str + i) != ' ')
-			word_count++;
-		while (*(str + i) != ' ' && *(str + i))
-			i++;
-		if (!*(str + i))
-			break;
+		for (j = 0; av[i][j] != '\0'; j++)
+			len++;
+		len++;
 	}
-	if (word_count == 0)
+
+	str = malloc(sizeof(char) * (len + 1));
+
+	if (str == NULL)
 		return (NULL);
-	a = malloc(sizeof(char *) * (word_count + 1));
-	if (a == NULL)
-		return (NULL);
-	for (i = 0, k = i; current_word < word_count; i++, word_len = 0, k = i)
+
+	k = 0;
+
+	for (i = 0; i < ac; i++)
 	{
-		if (*(str + i) == ' ')
-			continue;
-		while (*(str + k) != ' ' && *(str + k++))
-			word_len++;
-		a[current_word] = malloc(sizeof(char) * word_len + 1);
-		if (!a[current_word])
+		for (j = 0; av[i][j] != '\0'; j++)
 		{
-			while (current_word-- >= 0)
-				free(a[current_word]);
-			free(a);
-			return (NULL);
+			str[k] = av[i][j];
+			k++;
 		}
-		for (n = 0; i < k; i++, n++)
-			a[current_word][n] = *(str + i);
-		a[current_word++][n] = '\0';
+		str[k] = '\n';
+		k++;
 	}
-	a[word_count] = NULL;
-	return (a);
+	
+	return (str);
 }
